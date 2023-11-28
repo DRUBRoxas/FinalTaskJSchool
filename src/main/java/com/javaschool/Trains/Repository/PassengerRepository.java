@@ -1,4 +1,7 @@
 package com.javaschool.Trains.Repository;
 
-public interface PassengerRepository {
+import com.javaschool.Trains.Entity.Passenger;
+import org.springframework.data.repository.CrudRepository;
+
+public interface PassengerRepository extends CrudRepository<Passenger,Integer> {
 }
