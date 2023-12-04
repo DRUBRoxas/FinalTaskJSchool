@@ -2,27 +2,29 @@ package com.javaschool.trains.domain.user;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path="/user")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
+
 public class UserController {
     @Autowired
-    private UserRepository userRepository;
-
-    @PostMapping(path="/add")
-    public @ResponseBody String addNewUser (@RequestParam String email, @RequestParam String password){
-        User user = new User();
-        user.setEmail(email);
-        user.setPassword(password);
-        user.setRole(Role.USER);
-        userRepository.save(user);
-        return "Saved";
+    private UserService userService;
+    @GetMapping(value="{id}")
+    public ResponseEntity<Optional<User>> getUser(@PathVariable Integer id){
+        if(userService.find(id).isEmpty()){
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(userService.find(id));
     }
-
-    @PostMapping(path = "all")
+    @GetMapping(path = "all")
     public @ResponseBody Iterable<User> getAllUsers() {
-        return userRepository.findAll();
+        return userService.allUsers();
     }
+
 }

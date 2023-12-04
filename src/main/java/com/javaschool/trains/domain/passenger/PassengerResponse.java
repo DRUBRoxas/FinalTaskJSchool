@@ -1,4 +1,4 @@
-package com.javaschool.trains.domain.security;
+package com.javaschool.trains.domain.passenger;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RegisterRequest {
-    String email;
-    String password;
-    String name;
-    String lastname;
+public class PassengerResponse {
+    String message;
 }

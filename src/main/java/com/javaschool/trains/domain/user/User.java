@@ -31,6 +31,12 @@ public class User implements UserDetails {
     @Column(columnDefinition="LONGTEXT", name = "password", nullable = false)
     private String password;
 
+    @Column(name="name", nullable = false)
+    private String name;
+
+    @Column(name="lastname", nullable = false)
+    private String lastname;
+
     @Column(name = "role", nullable = false)
     private Role role;
 
