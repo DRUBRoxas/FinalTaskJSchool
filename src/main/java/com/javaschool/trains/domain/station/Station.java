@@ -1,14 +1,20 @@
 package com.javaschool.trains.domain.station;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "station")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "station", uniqueConstraints = {@UniqueConstraint(columnNames = {"stationName"})})
 public class Station {
     @Id
+    @GeneratedValue()
     @Column(name = "stationId", nullable = false)
     private Integer id;
 

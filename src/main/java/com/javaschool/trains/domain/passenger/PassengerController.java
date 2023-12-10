@@ -4,11 +4,10 @@ import com.javaschool.trains.domain.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path="/passenger")
+@RequestMapping(path="/api/passenger")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:4200")
 public class PassengerController {
@@ -28,7 +27,7 @@ public class PassengerController {
     @PutMapping(value = "/update")
     public ResponseEntity<PassengerResponse> updatePassenger(@RequestBody PassengerRequest passengerRequest)
     {
-        PassengerResponse passengerResponse = passengerService.updateUser(passengerRequest);
+        PassengerResponse passengerResponse = passengerService.updatePassenger(passengerRequest);
         if (passengerResponse==null)
         {
             return ResponseEntity.notFound().build();

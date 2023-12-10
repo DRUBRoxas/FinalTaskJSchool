@@ -1,94 +1,47 @@
 package com.javaschool.trains.domain.schedule;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.javaschool.trains.domain.station.Station;
 import com.javaschool.trains.domain.train.Train;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "schedule")
 public class Schedule {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "idSchedule", nullable = false)
     private Integer id;
-
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="HH:mm")
     @Column(name = "departureTime", nullable = false)
     private LocalTime departureTime;
 
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="HH:mm")
     @Column(name = "arrival_time", nullable = false)
     private LocalTime arrivalTime;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "departureStation", nullable = false)
     private Station departureStation;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "originStation", nullable = false)
     private Station originStation;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "train_Number", nullable = false)
     private Train trainNumber;
 
-    @Column(name = "isDelete")
-    private Boolean isDelete;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public LocalTime getDepartureTime() {
-        return departureTime;
-    }
-
-    public void setDepartureTime(LocalTime departureTime) {
-        this.departureTime = departureTime;
-    }
-
-    public LocalTime getArrivalTime() {
-        return arrivalTime;
-    }
-
-    public void setArrivalTime(LocalTime arrivalTime) {
-        this.arrivalTime = arrivalTime;
-    }
-
-    public Station getDepartureStation() {
-        return departureStation;
-    }
-
-    public void setDepartureStation(Station departureStation) {
-        this.departureStation = departureStation;
-    }
-
-    public Station getOriginStation() {
-        return originStation;
-    }
-
-    public void setOriginStation(Station originStation) {
-        this.originStation = originStation;
-    }
-
-    public Train getTrainNumber() {
-        return trainNumber;
-    }
-
-    public void setTrainNumber(Train trainNumber) {
-        this.trainNumber = trainNumber;
-    }
-
-    public Boolean getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(Boolean isDelete) {
-        this.isDelete = isDelete;
-    }
 
 }

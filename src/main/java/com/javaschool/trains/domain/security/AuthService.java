@@ -35,9 +35,7 @@ public class AuthService {
                 .lastname(request.getLastname())
                 .role(Role.USER)
                 .build();
-
         userRepository.save(user);
-
         return AuthResponse.builder()
                 .token(jwtService.getToken(user))
                 .build();

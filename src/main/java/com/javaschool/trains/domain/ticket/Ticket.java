@@ -4,8 +4,13 @@ import com.javaschool.trains.domain.passenger.Passenger;
 import com.javaschool.trains.domain.schedule.Schedule;
 import com.javaschool.trains.domain.seat.Seat;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "ticket")
 public class Ticket {
     @Id
@@ -13,59 +18,20 @@ public class Ticket {
     @Column(name = "idTicket", nullable = false)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "seats_idseat", nullable = false)
-    private Seat seatsIdseat;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "seat", nullable = false)
+    private Seat seat;
 
     @Column(name = "isDelete")
     private Boolean isDelete;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "schedule_idSchedule", nullable = false)
-    private Schedule scheduleIdschedule;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "schedule", nullable = false)
+    private Schedule schedule;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "passengerID", nullable = false)
-    private Passenger passengerUser;
+    private Passenger passenger;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Seat getSeatsIdseat() {
-        return seatsIdseat;
-    }
-
-    public void setSeatsIdseat(Seat seatsIdseat) {
-        this.seatsIdseat = seatsIdseat;
-    }
-
-    public Boolean getIsDelete() {
-        return isDelete;
-    }
-
-    public void setIsDelete(Boolean isDelete) {
-        this.isDelete = isDelete;
-    }
-
-    public Schedule getScheduleIdschedule() {
-        return scheduleIdschedule;
-    }
-
-    public void setScheduleIdschedule(Schedule scheduleIdschedule) {
-        this.scheduleIdschedule = scheduleIdschedule;
-    }
-
-    public Passenger getPassengerUserEmail() {
-        return passengerUser;
-    }
-
-    public void setPassengerUserEmail(Passenger passengerUser) {
-        this.passengerUser = passengerUser;
-    }
 
 }

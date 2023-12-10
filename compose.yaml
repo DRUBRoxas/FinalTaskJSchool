@@ -7,4 +7,4 @@ services:
       - 'MYSQL_ROOT_PASSWORD=root'
       - 'MYSQL_USER=springuser'
     ports:
-      - '3306'
+      - '8083:3306'

@@ -14,5 +14,7 @@ public interface PassengerRepository extends JpaRepository<Passenger,Integer> {
     Iterable<Passenger> findAllByUser(User user);
     @Modifying()
     @Query("update Passenger p set p.name = :name, p.lastname = :lastname, p.dateBirth = :dateBirth where p.id = :id")
-    void update(@Param(value="id") int id, @Param(value="name") String name, @Param(value="lastname") String lastname,@Param(value="dateBirth") LocalDate dateBirth);
+    void update(@Param(value="id") int id, @Param(value="name") String name,
+                @Param(value="lastname") String lastname,
+                @Param(value="dateBirth") LocalDate dateBirth);
 }

@@ -1,5 +1,6 @@
 package com.javaschool.trains.domain.passenger;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.javaschool.trains.domain.user.User;
 import jakarta.persistence.*;
@@ -19,13 +20,13 @@ import java.time.LocalDate;
 public class Passenger {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @JoinColumn(name = "appUser", nullable = false)
+    @JoinColumn(name = "user", nullable = false, unique = false)
     private User user;
 
     @Column(name = "name", nullable = false, length = 45)
@@ -35,6 +36,7 @@ public class Passenger {
     private String lastname;
 
     @Column(name = "date_birth", nullable = false)
+    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd")
     private LocalDate dateBirth;
 
     @Column(name = "isDelete")

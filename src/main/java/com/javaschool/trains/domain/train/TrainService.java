@@ -1,39 +1,59 @@
 package com.javaschool.trains.domain.train;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class TrainService {
     @Autowired
     private final TrainRepository trainRepository;
 
-    public TrainService(TrainRepository trainRepository){
-        this.trainRepository = trainRepository;
+    public TrainResponse createTrain(TrainRequest trainRequest) {
+        Train train = Train.builder()
+                .id(trainRequest.getId())
+                .build();
+        trainRepository.save(train);
+        return new TrainResponse("Train saved");
     }
 
-    public Train create(Train train){
-        return trainRepository.save(train);
+    public TrainResponse updateTrain(TrainRequest trainRequest) {
+        Train train = Train.builder()
+                .id(trainRequest.getId())
+                .build();
+        trainRepository.update(train.getId());
+        return new TrainResponse("Train updated");
     }
 
-    public Train update(Train train){
-        return trainRepository.save(train);
+    public TrainDTO getTrainById(int id) {
+        Train train = trainRepository.findById(id);
+        return TrainDTO.builder()
+                .id(train.getId())
+                .build();
     }
 
 
-    //TODO borrado recursivo
-    public boolean delete(Train train){
-        if(!train.getIsDelete()){
-            train.setIsDelete(true);
-            trainRepository.save(train);
-            return true;
-        }else{
-            return false;
+    public Iterable<TrainDTO> findAll() {
+        Iterable<Train> trains = trainRepository.findAll();
+        List<TrainDTO> trainsDTO = new ArrayList<>();
+        for(Train train: trains) {
+            trainsDTO.add(TrainDTO.builder()
+                    .id(train.getId())
+                    .build());
         }
+        return trainsDTO;
     }
 
-    public Optional<Train> find(Integer id){
-        return trainRepository.findById(id);
+    public TrainResponse deleteTrain(TrainRequest trainRequest) {
+        Train train = Train.builder()
+                .id(trainRequest.getId())
+                .build();
+        trainRepository.delete(train);
+        return new TrainResponse("Train deleted");
     }
 }
+
