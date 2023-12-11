@@ -10,11 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +33,6 @@ public class TicketService {
         Optional<Seat> seat = seatRepository.findById(ticketRequest.getIdSeat());
         LocalTime time = schedule.get().getDepartureTime();
         LocalTime timeMinus10= time.minus(10, MINUTES);
-        long minutos = MINUTES.between(timeMinus10, LocalTime.now());
         if(MINUTES.between(timeMinus10, LocalTime.now())<10){
             return new TicketResponse("Ticket wasn't created because departure time is in less than 10 minutes");
         }
@@ -48,16 +43,14 @@ public class TicketService {
             return new TicketResponse("Ticket wasn't created because passenger already has ticket to this travel");
         }
 
-        Iterable<Seat> seatIterable = seatRepository.findAllByTrainNumber(seat.get().getTrainNumber());
-        long totalSeats=seatIterable.spliterator().getExactSizeIfKnown();
-
-        if(ticketRepository.findAllBySchedule(schedule.get()).spliterator().getExactSizeIfKnown()>=totalSeats){
+        if(ticketRepository.findAllBySchedule(schedule.get()).spliterator().getExactSizeIfKnown()>=seat.get().getTrainNumber().getSeats()){
             return new TicketResponse("Ticket wasn't created because all seats are occupied");
         }
         Ticket ticket = Ticket.builder()
                 .passenger(passenger.get())
                 .schedule(schedule.get())
                 .seat(seat.get())
+                .isDelete(false)
                 .build();
         ticketRepository.save(ticket);
         return new TicketResponse("Ticket was created");
@@ -103,9 +96,9 @@ public class TicketService {
 
     public List<TicketDTO> findTicketByPassengerId(int id) {
         Optional<Passenger> passenger = passengerRepository.findById(id);
+        List<TicketDTO> ticketDTOList = new ArrayList<>();
         if (passenger.isPresent()) {
             Iterable<Ticket> ticket = ticketRepository.findAllByPassenger(passenger.get());
-            List<TicketDTO> ticketDTOList = new ArrayList<>();
             for (Ticket ticket1 : ticket) {
                 TicketDTO ticketDTO = TicketDTO.builder()
                         .id(ticket1.getId())
@@ -117,14 +110,14 @@ public class TicketService {
             }
             return ticketDTOList;
         }
-        return null;
+        return ticketDTOList;
     }
 
     public List<TicketDTO> findTicketByScheduleId(int id) {
         Optional<Schedule> schedule = scheduleRepository.findById(id);
+        List<TicketDTO> ticketDTOList = new ArrayList<>();
         if (schedule.isPresent()) {
             Iterable<Ticket> ticket = ticketRepository.findAllBySchedule(schedule.get());
-            List<TicketDTO> ticketDTOList = new ArrayList<>();
             for (Ticket ticket1 : ticket) {
                 TicketDTO ticketDTO = TicketDTO.builder()
                         .id(ticket1.getId())
@@ -136,6 +129,6 @@ public class TicketService {
             }
             return ticketDTOList;
         }
-        return null;
+        return ticketDTOList;
     }
 }

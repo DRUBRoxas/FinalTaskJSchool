@@ -31,4 +31,18 @@ public interface ScheduleRepository extends CrudRepository<Schedule, Integer> {
     Iterable<Schedule> findAllByOriginStationAndDepartureStationAndTrainNumber(Station station, Station station1, Train train);
 
     Iterable<Schedule> findAllByOriginStationAndDepartureStationAndDepartureTime(Station station, Station station1, LocalTime parse);
+
+    Iterable<Schedule> findAllByOriginStationOrDepartureStation(Station station, Station station1);
+
+    @Query ("SELECT s FROM Schedule s WHERE s.isDelete != true")
+    Iterable<Schedule> findAllValid();
+
+    @Query (value = "SELECT * FROM schedule s WHERE (s.origin_station = :origin OR :origin = -1) AND " +
+            "(s.departure_station = :destination OR :destination = -1) AND " +
+            "(s.departure_time >= :start OR :start IS null) AND " +
+            "(s.arrival_time <= :end OR :end IS null)", nativeQuery = true)
+    Iterable<Schedule> searchSchedule(@Param("origin") int origin,
+                                      @Param("destination") int destination,
+                                      @Param("start") LocalTime start,
+                                      @Param("end") LocalTime end);
 }

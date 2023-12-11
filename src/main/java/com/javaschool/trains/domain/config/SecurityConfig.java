@@ -22,6 +22,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
+
         return http
                 .csrf(csrf ->
                         csrf
@@ -32,6 +33,7 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
                                 .requestMatchers(HttpMethod.POST).permitAll()
                                 .requestMatchers(HttpMethod.DELETE).permitAll()
+                                .requestMatchers(HttpMethod.PUT).permitAll()
                                 .requestMatchers("/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )

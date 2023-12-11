@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,16 +15,24 @@ public class TrainService {
     public TrainResponse createTrain(TrainRequest trainRequest) {
         Train train = Train.builder()
                 .id(trainRequest.getId())
+                .isDelete(false)
+                .seats(0)
                 .build();
         trainRepository.save(train);
         return new TrainResponse("Train saved");
     }
 
     public TrainResponse updateTrain(TrainRequest trainRequest) {
-        Train train = Train.builder()
-                .id(trainRequest.getId())
-                .build();
-        trainRepository.update(train.getId());
+        Train train = trainRepository.findById(trainRequest.getId());
+        train.setSeats(trainRequest.getSeats());
+        trainRepository.save(train);
+        return new TrainResponse("Train updated");
+    }
+
+    public TrainResponse deleteTrain(TrainRequest trainRequest) {
+        Train train = trainRepository.findById(trainRequest.getId());
+        train.setIsDelete(!train.getIsDelete());
+        trainRepository.save(train);
         return new TrainResponse("Train updated");
     }
 
@@ -36,9 +43,8 @@ public class TrainService {
                 .build();
     }
 
-
     public Iterable<TrainDTO> findAll() {
-        Iterable<Train> trains = trainRepository.findAll();
+        Iterable<Train> trains = trainRepository.findAllValid();
         List<TrainDTO> trainsDTO = new ArrayList<>();
         for(Train train: trains) {
             trainsDTO.add(TrainDTO.builder()
@@ -46,14 +52,6 @@ public class TrainService {
                     .build());
         }
         return trainsDTO;
-    }
-
-    public TrainResponse deleteTrain(TrainRequest trainRequest) {
-        Train train = Train.builder()
-                .id(trainRequest.getId())
-                .build();
-        trainRepository.delete(train);
-        return new TrainResponse("Train deleted");
     }
 }
 

@@ -22,7 +22,7 @@ public class TrainController {
     }
 
     @GetMapping(value="/{id}")
-    public ResponseEntity<TrainDTO> getTrain(int id) {
+    public ResponseEntity<TrainDTO> getTrain(@PathVariable int id) {
         TrainDTO trainDTO = trainService.getTrainById(id);
         if (trainDTO == null) {
             return ResponseEntity.notFound().build();

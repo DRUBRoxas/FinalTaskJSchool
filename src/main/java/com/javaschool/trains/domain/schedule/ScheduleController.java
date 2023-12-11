@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path="/schedule")
+@RequestMapping(path="/api/schedule")
 @CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 public class ScheduleController {
@@ -110,6 +110,16 @@ public class ScheduleController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(scheduleDTOS);
+    }
+
+    @PostMapping(path="/filtered/between")
+    public ResponseEntity<Iterable<ScheduleDTO>> getFilteredSchedules(@RequestBody ScheduleSearch scheduleRequest) {
+
+        Iterable<ScheduleDTO> scheduleDTO = scheduleService.findByTimeBetween(scheduleRequest);
+        if (scheduleDTO == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(scheduleDTO);
     }
 }
 

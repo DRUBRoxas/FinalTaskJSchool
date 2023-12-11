@@ -57,7 +57,7 @@ public class PassengerController {
         return ResponseEntity.ok(passengerDTO);
     }
 
-    @GetMapping(value = "/{id}/all")
+    @GetMapping(value = "/all/user")
     public ResponseEntity<Iterable<PassengerDTO>> getAllPassengersofUser()
     {
         Object loggedUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();

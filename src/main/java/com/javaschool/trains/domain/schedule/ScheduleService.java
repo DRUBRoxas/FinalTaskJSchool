@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 public class ScheduleService {
@@ -31,6 +32,7 @@ public class ScheduleService {
                 .trainNumber(train)
                 .originStation(originStation)
                 .departureStation(departureStation)
+                .isDelete(false)
                 .build();
 
         scheduleRepository.save(schedule);
@@ -41,18 +43,17 @@ public class ScheduleService {
         Train train= trainRepository.findById(scheduleRequest.getIdTrain());
         Station originStation = stationRepository.findById(scheduleRequest.getIdOriginStation());
         Station departureStation = stationRepository.findById(scheduleRequest.getIdDepartureStation());
-        Schedule schedule = Schedule.builder()
-                .id(scheduleRequest.getId())
-                .departureTime(scheduleRequest.getDepartureTime())
-                .arrivalTime(scheduleRequest.getArrivalTime())
-                .trainNumber(train)
-                .originStation(originStation)
-                .departureStation(departureStation)
-                .build();
-
-        scheduleRepository.update(schedule.getId(), schedule.getTrainNumber(), schedule.getArrivalTime(),
-                schedule.getDepartureTime(), schedule.getOriginStation(), schedule.getDepartureStation());
-        return new ScheduleResponse("Schedule added successfully");
+        Optional<Schedule> schedule = scheduleRepository.findById(scheduleRequest.getId());
+        if (schedule.isPresent()) {
+            schedule.get().setDepartureTime(scheduleRequest.getDepartureTime());
+            schedule.get().setArrivalTime(scheduleRequest.getArrivalTime());
+            schedule.get().setTrainNumber(train);
+            schedule.get().setOriginStation(originStation);
+            schedule.get().setDepartureStation(departureStation);
+            scheduleRepository.save(schedule.get());
+            return new ScheduleResponse("Schedule updated successfully");
+        }
+        return new ScheduleResponse("Schedule not found");
     }
 
     public ScheduleResponse delete(int id){
@@ -61,8 +62,8 @@ public class ScheduleService {
     }
 
     public Iterable<ScheduleDTO> findAll() {
-        Iterable<Schedule> schedules = scheduleRepository.findAll();
-        List<ScheduleDTO> scheduleDTOs = new ArrayList<ScheduleDTO>();
+        Iterable<Schedule> schedules = scheduleRepository.findAllValid();
+        List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
         for (Schedule schedule : schedules) {
             scheduleDTOs.add(ScheduleDTO.builder()
                     .id(schedule.getId())
@@ -95,16 +96,18 @@ public class ScheduleService {
         Optional<Station> station = stationRepository.findByStationName(stationName);
         if (station.isPresent()) {
             Iterable<Schedule> schedules = scheduleRepository.findAllByOriginStation(station.get());
-            List<ScheduleDTO> scheduleDTOs = new ArrayList<ScheduleDTO>();
+            List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
             for (Schedule schedule : schedules) {
-                scheduleDTOs.add(ScheduleDTO.builder()
-                        .id(schedule.getId())
-                        .departureTime(schedule.getDepartureTime())
-                        .arrivalTime(schedule.getArrivalTime())
-                        .train(schedule.getTrainNumber())
-                        .originStation(schedule.getOriginStation())
-                        .departureStation(schedule.getDepartureStation())
-                        .build());
+                if(!schedule.getIsDelete()){
+                    scheduleDTOs.add(ScheduleDTO.builder()
+                            .id(schedule.getId())
+                            .departureTime(schedule.getDepartureTime())
+                            .arrivalTime(schedule.getArrivalTime())
+                            .train(schedule.getTrainNumber())
+                            .originStation(schedule.getOriginStation())
+                            .departureStation(schedule.getDepartureStation())
+                            .build());
+                }
             }
             return scheduleDTOs;
         }
@@ -117,14 +120,16 @@ public class ScheduleService {
             Iterable<Schedule> schedules = scheduleRepository.findAllByDepartureStation(station.get());
             List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
             for (Schedule schedule : schedules) {
-                scheduleDTOs.add(ScheduleDTO.builder()
-                        .id(schedule.getId())
-                        .departureTime(schedule.getDepartureTime())
-                        .arrivalTime(schedule.getArrivalTime())
-                        .train(schedule.getTrainNumber())
-                        .originStation(schedule.getOriginStation())
-                        .departureStation(schedule.getDepartureStation())
-                        .build());
+                if(!schedule.getIsDelete()){
+                    scheduleDTOs.add(ScheduleDTO.builder()
+                            .id(schedule.getId())
+                            .departureTime(schedule.getDepartureTime())
+                            .arrivalTime(schedule.getArrivalTime())
+                            .train(schedule.getTrainNumber())
+                            .originStation(schedule.getOriginStation())
+                            .departureStation(schedule.getDepartureStation())
+                            .build());
+                }
             }
             return scheduleDTOs;
         }
@@ -138,14 +143,16 @@ public class ScheduleService {
             Iterable<Schedule> schedules = scheduleRepository.findAllByOriginStationAndDepartureStation(originStation.get(), destinationStation.get());
             List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
             for (Schedule schedule : schedules) {
-                scheduleDTOs.add(ScheduleDTO.builder()
-                        .id(schedule.getId())
-                        .departureTime(schedule.getDepartureTime())
-                        .arrivalTime(schedule.getArrivalTime())
-                        .train(schedule.getTrainNumber())
-                        .originStation(schedule.getOriginStation())
-                        .departureStation(schedule.getDepartureStation())
-                        .build());
+                if(!schedule.getIsDelete()){
+                    scheduleDTOs.add(ScheduleDTO.builder()
+                            .id(schedule.getId())
+                            .departureTime(schedule.getDepartureTime())
+                            .arrivalTime(schedule.getArrivalTime())
+                            .train(schedule.getTrainNumber())
+                            .originStation(schedule.getOriginStation())
+                            .departureStation(schedule.getDepartureStation())
+                            .build());
+                }
             }
             return scheduleDTOs;
         }
@@ -158,14 +165,16 @@ public class ScheduleService {
             Iterable<Schedule> schedules = scheduleRepository.findAllByTrainNumber(train);
             List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
             for (Schedule schedule : schedules) {
-                scheduleDTOs.add(ScheduleDTO.builder()
-                        .id(schedule.getId())
-                        .departureTime(schedule.getDepartureTime())
-                        .arrivalTime(schedule.getArrivalTime())
-                        .train(schedule.getTrainNumber())
-                        .originStation(schedule.getOriginStation())
-                        .departureStation(schedule.getDepartureStation())
-                        .build());
+                if(!schedule.getIsDelete()){
+                    scheduleDTOs.add(ScheduleDTO.builder()
+                            .id(schedule.getId())
+                            .departureTime(schedule.getDepartureTime())
+                            .arrivalTime(schedule.getArrivalTime())
+                            .train(schedule.getTrainNumber())
+                            .originStation(schedule.getOriginStation())
+                            .departureStation(schedule.getDepartureStation())
+                            .build());
+                }
             }
             return scheduleDTOs;
         }
@@ -180,13 +189,16 @@ public class ScheduleService {
             Iterable<Schedule> schedules = scheduleRepository.findAllByOriginStationAndDepartureStationAndTrainNumber(originStation.get(), destinationStation.get(), train.get());
             List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
             for (Schedule schedule : schedules) {
-                scheduleDTOs.add(ScheduleDTO.builder()
-                        .departureTime(schedule.getDepartureTime())
-                        .arrivalTime(schedule.getArrivalTime())
-                        .train(schedule.getTrainNumber())
-                        .originStation(schedule.getOriginStation())
-                        .departureStation(schedule.getDepartureStation())
-                        .build());
+                if(!schedule.getIsDelete()){
+                    scheduleDTOs.add(ScheduleDTO.builder()
+                            .id(schedule.getId())
+                            .departureTime(schedule.getDepartureTime())
+                            .arrivalTime(schedule.getArrivalTime())
+                            .train(schedule.getTrainNumber())
+                            .originStation(schedule.getOriginStation())
+                            .departureStation(schedule.getDepartureStation())
+                            .build());
+                }
             }
             return scheduleDTOs;
         }
@@ -201,6 +213,40 @@ public class ScheduleService {
             List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
             for (Schedule schedule : schedules) {
                 scheduleDTOs.add(ScheduleDTO.builder()
+                        .departureTime(schedule.getDepartureTime())
+                        .arrivalTime(schedule.getArrivalTime())
+                        .train(schedule.getTrainNumber())
+                        .originStation(schedule.getOriginStation())
+                        .departureStation(schedule.getDepartureStation())
+                        .build());
+            }
+            return scheduleDTOs;
+        }
+        return null;
+    }
+
+    public Iterable<ScheduleDTO> findByTimeBetween(ScheduleSearch search) {
+        Iterable<Schedule> results = scheduleRepository.searchSchedule(search.getOrigin(), search.getDestination(), search.getStart(), search.getEnd());
+        List<ScheduleDTO> response = new ArrayList<>();
+        for (Schedule schedule : results) {
+            response.add(new ScheduleDTO(schedule.getId(),
+                    schedule.getTrainNumber(),
+                    schedule.getDepartureTime(),
+                    schedule.getArrivalTime(),
+                    schedule.getOriginStation(),
+                    schedule.getDepartureStation()));
+        }
+        return response;
+    }
+
+    public Iterable<ScheduleDTO> findByOriginOrDestinationStation(String stationName) {
+        Optional<Station> station = stationRepository.findByStationName(stationName);
+        if (station.isPresent()) {
+            Iterable<Schedule> schedules = scheduleRepository.findAllByOriginStationOrDepartureStation(station.get(), station.get());
+            List<ScheduleDTO> scheduleDTOs = new ArrayList<>();
+            for (Schedule schedule : schedules) {
+                scheduleDTOs.add(ScheduleDTO.builder()
+                        .id(schedule.getId())
                         .departureTime(schedule.getDepartureTime())
                         .arrivalTime(schedule.getArrivalTime())
                         .train(schedule.getTrainNumber())

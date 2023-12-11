@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Entity
@@ -43,5 +42,7 @@ public class Schedule {
     @JoinColumn(name = "train_Number", nullable = false)
     private Train trainNumber;
 
+    @Column(name = "isDelete")
+    private Boolean isDelete;
 
 }

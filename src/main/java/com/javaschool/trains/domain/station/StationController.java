@@ -1,10 +1,8 @@
 package com.javaschool.trains.domain.station;
 
-import com.javaschool.trains.domain.passenger.PassengerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,7 +23,7 @@ public class StationController {
     }
 
     @GetMapping(path="/{id}")
-    public ResponseEntity<StationDTO> getStation(int id) {
+    public ResponseEntity<StationDTO> getStation(@PathVariable int id) {
         StationDTO stationDTO = stationService.getStationById(id);
         if (stationDTO == null) {
             return ResponseEntity.notFound().build();
@@ -59,4 +57,6 @@ public class StationController {
         }
         return ResponseEntity.ok(stationResponse);
     }
+
+
 }
