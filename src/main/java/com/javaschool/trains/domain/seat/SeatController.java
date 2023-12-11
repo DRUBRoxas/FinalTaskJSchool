@@ -1,6 +1,5 @@
 package com.javaschool.trains.domain.seat;
 
-import com.javaschool.trains.domain.station.StationDTO;
 import com.javaschool.trains.domain.train.Train;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

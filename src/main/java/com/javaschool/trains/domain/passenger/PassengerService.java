@@ -1,7 +1,6 @@
 package com.javaschool.trains.domain.passenger;
 
 import com.javaschool.trains.domain.user.User;
-import lombok.Generated;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
