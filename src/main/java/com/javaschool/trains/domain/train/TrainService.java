@@ -49,6 +49,7 @@ public class TrainService {
         for(Train train: trains) {
             trainsDTO.add(TrainDTO.builder()
                     .id(train.getId())
+                    .seats(train.getSeats())
                     .build());
         }
         return trainsDTO;

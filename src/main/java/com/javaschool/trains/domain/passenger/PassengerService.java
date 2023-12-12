@@ -23,6 +23,7 @@ public class PassengerService {
                 .user((User) loggedUser)
                 .lastname(passengerRequest.lastname)
                 .dateBirth(LocalDate.from(passengerRequest.dateBirth))
+                .isDelete(false)
                 .build();
         passengerRepository.save(passenger);
         return new PassengerResponse("Passenger created");
@@ -39,13 +40,15 @@ public class PassengerService {
         passengerRepository.update(passenger.getId(),passenger.getName(),passenger.getLastname(),passenger.getDateBirth());
         return new PassengerResponse("Passenger updated");
     }
-    public boolean delete(Passenger passenger){
-        if(Boolean.FALSE.equals(passenger.getIsDelete())){
-            passenger.setIsDelete(true);
+    public PassengerResponse delete(int id){
+        Passenger passenger= passengerRepository.findById(id).orElse(null);
+        boolean passengerIsDelete = passenger.getIsDelete();
+        if(!passenger.getIsDelete()){
+            passenger.setIsDelete(!passenger.getIsDelete());
             passengerRepository.save(passenger);
-            return true;
+            return new PassengerResponse("Passenger deleted");
         }else{
-            return false;
+            return new PassengerResponse("Passenger not deleted");
         }
     }
 
@@ -95,6 +98,5 @@ public class PassengerService {
         }
             return passengerDTOS;
         }
-
 
 }

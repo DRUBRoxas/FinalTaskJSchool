@@ -50,6 +50,14 @@ public class SeatController {
         }
         return ResponseEntity.ok(seatResponse);
     }
+    @PostMapping(value = "/{trainNumber}/addauto")
+    public ResponseEntity<SeatResponse> auto(@PathVariable int trainNumber) {
+        SeatResponse seatResponse = seatService.createSeatAuto(trainNumber);
+        if (seatResponse == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(seatResponse);
+    }
 
     @DeleteMapping(value = "/delete")
     public ResponseEntity<SeatResponse> deleteSeat(@RequestBody SeatRequest seatRequest) {

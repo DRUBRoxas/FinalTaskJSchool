@@ -3,6 +3,7 @@ package com.javaschool.trains.domain.seat;
 import com.javaschool.trains.domain.train.Train;
 import com.javaschool.trains.domain.train.TrainRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.IterableUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -65,16 +66,18 @@ public class SeatService {
         return new SeatResponse("Seat saved");
     }
 
-    //TODO UPDATE SEAT
-    public SeatResponse updateSeat(SeatRequest seatRequest,int idTrain) {
-        Train train = trainRepository.findById(idTrain);
+    public SeatResponse createSeatAuto(int idTrain){
+        Train train= trainRepository.findById(idTrain);
+        Iterable<Seat> seats = seatRepository.findAllByTrainNumber(train);
+        int seatNumber= IterableUtils.size(seats)+1;
         Seat seat = Seat.builder()
-                .id(seatRequest.getId())
-                .seatNumber(seatRequest.getSeatNumber())
-                .trainNumber(train)
+                .seatNumber(seatNumber)
+                .trainNumber(trainRepository.findById(idTrain))
                 .build();
-        seatRepository.update(seat.getId(), seat.getSeatNumber(), seat.getTrainNumber());
-        return new SeatResponse("Seat updated");
+        seatRepository.save(seat);
+        train.setSeats(seatNumber);
+        trainRepository.save(train);
+        return new SeatResponse("Seat saved");
     }
 
     public SeatResponse deleteSeat(int id) {

@@ -58,9 +58,10 @@ public class PassengerController {
     }
 
     @GetMapping(value = "/all/user")
-    public ResponseEntity<Iterable<PassengerDTO>> getAllPassengersofUser()
+    public ResponseEntity<Iterable<PassengerDTO>> getAllPassengersofUser(@RequestHeader("Authorization") String token)
     {
         Object loggedUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user= (User) loggedUser;
         Iterable<PassengerDTO> passengerDTO = passengerService.findAllOfUser((User) loggedUser);
         if (passengerDTO==null)
         {
@@ -68,4 +69,18 @@ public class PassengerController {
         }
         return ResponseEntity.ok(passengerDTO);
     }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public ResponseEntity<PassengerResponse> deletePassenger(@PathVariable int id)
+    {
+        Object loggedUser = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = (User) loggedUser;
+        PassengerResponse passengerResponse = passengerService.delete(id);
+        if (passengerResponse==null)
+        {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(passengerResponse);
+    }
+
 }

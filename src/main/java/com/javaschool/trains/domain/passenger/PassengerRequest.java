@@ -1,5 +1,6 @@
 package com.javaschool.trains.domain.passenger;
 
+import com.javaschool.trains.domain.user.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
