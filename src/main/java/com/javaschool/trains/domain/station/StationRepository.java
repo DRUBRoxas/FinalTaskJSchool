@@ -15,4 +15,7 @@ public interface StationRepository extends JpaRepository<Station, Integer> {
     void update(@Param(value="id")int id,@Param("stationName") String stationName);
 
     Optional<Station> findAllByStationName(String stationName);
+
+    @Query ("SELECT s FROM Station s WHERE s.isDelete != true")
+    Iterable<Station> findAllValid();
 }

@@ -33,7 +33,7 @@ public class SeatController {
         return ResponseEntity.ok(seatDTO);
     }
 
-    @GetMapping(path="/{trainNumber}")
+    @GetMapping(path="/train/{trainNumber}")
     public ResponseEntity<Iterable<SeatDTO>> getAllSeatsByTrain(@PathVariable Train trainNumber) {
         Iterable<SeatDTO> seatDTO = seatService.findAllSeatsByTrain(trainNumber);
         if (seatDTO == null) {

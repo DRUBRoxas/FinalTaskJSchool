@@ -57,7 +57,7 @@ public class TicketService {
     }
 
     public List<TicketDTO> findAll() {
-        Iterable <Ticket> ticket = ticketRepository.findAll();
+        Iterable <Ticket> ticket = ticketRepository.findAllValid();
         List<TicketDTO> ticketDTOList = new ArrayList<>();
         for (Ticket ticket1 : ticket) {
             TicketDTO ticketDTO = TicketDTO.builder()
@@ -87,8 +87,9 @@ public class TicketService {
     public TicketResponse delete(int id) {
         Optional<Ticket> ticket = ticketRepository.findById(id);
         if (ticket.isPresent()) {
-            ticket.get().setIsDelete(true);
-            ticketRepository.save(ticket.get());
+            Ticket ticketObj = ticket.get();
+            ticketObj.setIsDelete(!ticketObj.getIsDelete());
+            ticketRepository.save(ticketObj);
             return new TicketResponse("Ticket was deleted");
         }
         return new TicketResponse("Ticket wasn't deleted");

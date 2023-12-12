@@ -11,4 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class TrainDTO {
     int id;
+    int seats;
 }

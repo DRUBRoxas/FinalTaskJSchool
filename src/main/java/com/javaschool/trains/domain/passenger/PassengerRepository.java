@@ -17,4 +17,7 @@ public interface PassengerRepository extends JpaRepository<Passenger,Integer> {
     void update(@Param(value="id") int id, @Param(value="name") String name,
                 @Param(value="lastname") String lastname,
                 @Param(value="dateBirth") LocalDate dateBirth);
+
+    @Query("SELECT p FROM Passenger p WHERE p.isDelete != true")
+    Iterable<Passenger> findAllValid();
 }

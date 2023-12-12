@@ -23,4 +23,7 @@ public class Train {
     @Column(name = "isDelete")
     private Boolean isDelete;
 
+    @Column(name = "train_seats")
+    private int seats;
+
 }
